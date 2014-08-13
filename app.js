@@ -43,16 +43,11 @@ var esResponse = function(req, res) {
 		res.send(x);
 	}
 };
-app.post('/test', function(req, res) {
-	res.send('a');
-	console.log(req.body);
-});
+
 app.get('/', require('./routes/index'));
 app.all('/_search', require('./routes/_search'));
-
 app.put('*', esResponse);
 app.post('*', esResponse);
-
 app.all('*', require('./routes/404'));
 
 http.createServer(app).listen(app.get('port'), function(){
