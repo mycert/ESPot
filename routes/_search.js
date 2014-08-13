@@ -38,7 +38,7 @@ module.exports = function(req, res) {
 					}]
 				}
 			};
-			ret.hits.hits[0].fields[key] = ["fake data"];
+			ret.hits.hits[0].fields[key] = [""];
 			if( req.query.callback ) {
 				res.jsonp(ret);
 			} else {
