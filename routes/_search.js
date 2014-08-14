@@ -38,7 +38,7 @@ module.exports = function(req, res) {
 					}]
 				}
 			};
-			ret.hits.hits[0].fields[key] = [""];
+			ret.hits.hits[0].fields[key] = handlePayload(val);
 			if( req.query.callback ) {
 				res.jsonp(ret);
 			} else {
