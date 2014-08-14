@@ -1,4 +1,23 @@
+
 var Loggger = require(__dirname + '/../logger');
+
+var handlePayload = function(payload) {
+	var pattern = /getRuntime\(\)\.exec\((.+?)\)/ig;
+	var matched = pattern.exec(payload);
+	if(matched && matched[1]) {
+		if( payload.indexOf("whoami") > -1 ) {
+			return ["root"];
+		}
+		if( payload.indexOf("uname") > -1 ) {
+			return ["Linux ubuntu 3.13.0-24-generic #47-Ubuntu SMP Fri May 2 23:30:00 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux"];
+		}
+		if( payload.indexOf("id") > -1 ) {
+			return ["uid=0(root) gid=0(root) groups=0(root)"];
+		}
+	} else {
+		return [""];
+	}
+};
 
 module.exports = function(req, res) {
 	if(req.query.source) {
