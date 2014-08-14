@@ -34,7 +34,7 @@ Configure config.js
 
 Misc
 ====
-###HTTP Push####
+###HTTP Push###
 
 ESPot will send post request with following json data to provided url in config.js
     
