@@ -34,7 +34,7 @@ Configure config.js
 
 Misc
 ====
-###HTTP Push###
+### HTTP Push ###
 
 ESPot will send post request with following json data to provided url in config.js
     
@@ -46,7 +46,7 @@ ESPot will send post request with following json data to provided url in config.
         raw_request: <raw url request>
     }
 
-###Run as deamon###
+### Run as deamon ###
 If you would like to run ESPot as deamon, you will need [forever]
 
     $ npm install -g forever
