@@ -13,7 +13,7 @@ module.exports = {
 			stmt.run(data.raw_request);
 			stmt.run(data.timestamp);
 			stmt.finalize();
-			db.close();
+			// db.close();
 		});
 	}
 };
