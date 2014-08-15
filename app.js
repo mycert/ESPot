@@ -35,7 +35,7 @@ var esResponse = function(req, res) {
 
 	if( !path[3] ) {
 		app.set('Content-Type', 'text/plain');
-		res.send("No handler found for url [" + req.originalUrl + "] and method [PUT]");
+		res.send("No handler found for url [" + req.originalUrl + "] and method [" + req.method + "]");
 	} else {
 		x._index = path[1];
 		x._type = path[2];
