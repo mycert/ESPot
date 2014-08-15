@@ -1,4 +1,4 @@
 config.js
 logs/attack.db
-
+logs/*
 sftp-config.json
