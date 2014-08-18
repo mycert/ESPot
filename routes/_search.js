@@ -67,6 +67,19 @@ module.exports = function(req, res) {
 			res.send("No handler found for url [" + req.originalUrl + "] and method [" + req.method + "]");
 		}
 	} else {
-		res.send("No handler found for url [" + req.originalUrl + "] and method [" + req.method + "]");
+		res.send({
+			"took" : 0,
+			"timed_out" : false,
+			"_shards" : {
+				"total" : 0,
+				"successful" : 0,
+				"failed" : 0
+			},
+			"hits" : {
+				"total" : 0,
+				"max_score" : 0.0,
+				"hits" : [ ]
+			}
+		});
 	}
 };
