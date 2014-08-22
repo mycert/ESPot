@@ -6,13 +6,7 @@ module.exports = {
 	log: function(data) {
 		db.serialize(function() {
 			db.run("CREATE TABLE IF NOT EXISTS attack ( id INTEGER PRIMARY KEY AUTOINCREMENT, ip TEXT, payload TEXT, payload_key TEXT, raw_request TEXT, timestamp INTEGER );");
-			var stmt = db.prepare("INSERT INTO attack (ip, payload, payload_key, raw_request, timestamp) VALUES (?, ?, ?, ?, ?)");
-			stmt.run(data.ip);
-			stmt.run(data.payload);
-			stmt.run(data.payload_key);
-			stmt.run(data.raw_request);
-			stmt.run(data.timestamp);
-			stmt.finalize();
+			db.run("INSERT INTO attack (ip, payload, payload_key, raw_request, timestamp) VALUES (?, ?, ?, ?, ?);", data.ip, data.payload, data.payload_key, data.raw_request, data.timestamp);
 			// db.close();
 		});
 	}
