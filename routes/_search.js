@@ -1,9 +1,49 @@
+var fs = require('fs');
+var request = require('request');
+var Logger = require(__dirname + '/../logger');
+var crypto = require('crypto');
 
-var Loggger = require(__dirname + '/../logger');
+var downloader = function(url) {
+	var temp_path = '/tmp/espot-' + crypto.randomBytes(4).readUInt32LE(0) + '.tmp';
+	var req = request({
+		url: url,
+		headers: {
+			'User-Agent': 'Wget/1.5.3'
+		}
+	}).pipe(fs.createWriteStream(temp_path));
+
+	req.on('finish', function() {
+		var hashfile = crypto.createHash('md5');
+		var fread = fs.ReadStream(temp_path);
+		fread.on('data', function(d) {
+			hashfile.update(d);
+		});
+		fread.on('end', function() {
+			var hash = hashfile.digest('hex');
+			Logger.logdl({
+				url: url,
+				hash: hash
+			});
+			fs.exists( __dirname + '/../downloads/' + hash, function(exists) {
+				if( !exists ) {
+					var _src = fs.createReadStream(temp_path);
+					var _dst = fs.createWriteStream( __dirname + '/../downloads/' + hash );
+					_src.pipe(_dst, { end: false });
+					_src.on('end', function() {
+						fs.unlinkSync(temp_path);
+					});
+				} else {
+					fs.unlinkSync(temp_path);
+				}
+			});
+		});
+	});
+};
 
 var handlePayload = function(payload) {
 	var pattern = /getRuntime\(\)\.exec\((.+?)\)/ig;
 	var matched = pattern.exec(payload);
+
 	if(matched && matched[1]) {
 		if( payload.indexOf("whoami") > -1 ) {
 			return ["root"];
@@ -13,6 +53,16 @@ var handlePayload = function(payload) {
 		}
 		if( payload.indexOf("id") > -1 ) {
 			return ["uid=0(root) gid=0(root) groups=0(root)"];
+		}
+		if( payload.indexOf("wget") > -1 ) {
+			var url_pattern = /((?:f|ht)tps?:\/\/(?:.+?))\s/;
+			var url = url_pattern.exec(payload)[1];
+			console.log(url);
+			if( url ) {
+				console.log(url);
+				downloader(url);
+			}
+			return [""];
 		}
 	} else {
 		return [""];
@@ -29,7 +79,7 @@ module.exports = function(req, res) {
 		if( payload.script_fields ) {
 			var key = Object.keys(payload.script_fields)[0];
 			var val = payload.script_fields[key].script;
-			Loggger.log({
+			Logger.log({
 				payload: val,
 				payload_key: key,
 				ip: req.ip,
